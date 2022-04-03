@@ -24,7 +24,6 @@ export class AppService {
   }
 
   static async getMediaList(token: string): Promise<MediaListModel> {
-    console.log(token);
     const response = await fetch(this.url + "/Media/GetMediaList", {
       method: "POST",
       headers: {
@@ -65,5 +64,16 @@ export class AppService {
       throw new Error(ERROR_MESSAGES.SUBSCRIPTION_ERROR);
     }
     return await response.json();
+  }
+
+  static checkIfTokenExpired(): boolean {
+    if (localStorage.getItem("expire") !== null) {
+      return (
+        new Date(
+          Date.parse(localStorage.getItem("expire")!.toString())
+        ).toLocaleString() < new Date().toLocaleString()
+      );
+    }
+    return true;
   }
 }

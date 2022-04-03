@@ -1,5 +1,5 @@
 import { Button, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppService } from "../service/AppService";
 import { ListItem } from "./ListItem";
 import { Pagination } from "./Pagination";
@@ -16,6 +16,7 @@ export const Home = () => {
   const [currentMediaId, setCurrentMediaId] = useState<number>();
   const [pageNr, setPageNr] = useState<number>(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
 
   let navigate = useNavigate();
 
@@ -35,7 +36,16 @@ export const Home = () => {
       return navigate("/");
     } else {
       getMediaList();
+      //when the token expires, return to the login page. TODO: message to user
+      intervalRef.current = setInterval(() => {
+        if (AppService.checkIfTokenExpired()) {
+          return navigate("/");
+        }
+      }, 10000);
     }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   return (

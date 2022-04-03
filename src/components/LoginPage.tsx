@@ -30,8 +30,13 @@ export const LoginPage = () => {
 
   const logIn = async (username: string, password: string) => {
     await AppService.logIn(username, password)
-      .then((response) => {
+      .then((response: SignIn) => {
         localStorage.setItem("token", response.AuthorizationToken.Token);
+        localStorage.setItem(
+          "expire",
+          response.AuthorizationToken.TokenExpires.toString()
+        );
+
         navigate("/home");
       })
       .catch((error) => setErrorMessage(error.message));
