@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import React from "react";
 interface ListItemProps {
   onClick: any;

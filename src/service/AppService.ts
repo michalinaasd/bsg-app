@@ -29,6 +29,9 @@ export class AppService {
       }),
     });
 
+    if (response.status === 401) {
+      throw new Error("Incorrect username or password");
+    }
     return await response.json();
   }
 

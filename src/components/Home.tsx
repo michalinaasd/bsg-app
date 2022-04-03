@@ -1,10 +1,4 @@
-import {
-  Button,
-  Flex,
-  Spinner,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Button, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AppService } from "../service/AppService";
 import { ListItem } from "./ListItem";
@@ -61,6 +55,7 @@ export const Home = () => {
             <Pagination pageSize={3} pageNr={pageNr}>
               {mediaList?.Entities?.map((e) => (
                 <ListItem
+                  key={e.Id}
                   onClick={() => {
                     setCurrentMediaId(e.Id);
                     onOpen();

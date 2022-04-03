@@ -1,63 +1,59 @@
 import {
-  Flex,
   Box,
-  Heading,
-  FormControl,
-  FormLabel,
-  Input,
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  Input,
 } from "@chakra-ui/react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { AppService } from "../service/AppService";
+import { Alert } from "./Alert";
 
-type FormValues = {
-  username: string;
-  password: string;
+type LoginProps = {
+  onSubmit: any;
+  register: any;
+  errors: any;
+  errorMessage: string;
 };
 
-export const Login = () => {
-  let navigate = useNavigate();
-  const { register, handleSubmit } = useForm<FormValues>();
-  const logIn = async (username: string, password: string) => {
-    const response: SignIn = await AppService.logIn(username, password);
-    localStorage.setItem("token", response.AuthorizationToken.Token);
-    navigate("/home");
-  };
-
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    logIn(data.username, data.password);
-  };
+export const Login: React.FC<LoginProps> = (props) => {
   return (
-    <Flex width="full" align="center" justifyContent="center">
-      <Box p={2}>
-        <Box textAlign="center">
-          <Heading>Login</Heading>
-        </Box>
-        <Box my={4} textAlign="left">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl>
-              <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                {...register("username")}
-                placeholder="test@test.com"
-              />
-            </FormControl>
-            <FormControl mt={6}>
-              <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                {...register("password")}
-                placeholder="*******"
-              />
-            </FormControl>
-            <Button width="full" mt={4} type="submit">
-              Sign In
-            </Button>
-          </form>
-        </Box>
+    <Box p={2}>
+      <Box textAlign="center">
+        <Heading>Login</Heading>
       </Box>
-    </Flex>
+      <Box my={4} textAlign="left">
+        <form onSubmit={props.onSubmit} noValidate>
+          <FormControl
+            isInvalid={typeof props.errors.username?.message === "string"}
+          >
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              {...props.register("username")}
+              placeholder="test@test.com"
+            />
+            <FormErrorMessage>
+              {props.errors.username?.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl
+            mt={6}
+            isInvalid={typeof props.errors.password?.message === "string"}
+          >
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              {...props.register("password")}
+              placeholder="*******"
+            />
+          </FormControl>
+          <Button width="full" mt={4} type="submit">
+            Sign In
+          </Button>
+        </form>
+        {props.errorMessage && <Alert message={props.errorMessage} />}
+      </Box>
+    </Box>
   );
 };
