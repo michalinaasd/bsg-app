@@ -31,7 +31,6 @@ export const LoginPage = () => {
   const logIn = async (username: string, password: string) => {
     await AppService.logIn(username, password)
       .then((response) => {
-        console.log(response);
         localStorage.setItem("token", response.AuthorizationToken.Token);
         navigate("/home");
       })

@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
+import { ERROR_MESSAGES } from "../constants";
 import { AppService } from "../service/AppService";
 
 interface PlayerProps {
@@ -20,21 +21,30 @@ interface PlayerProps {
 
 export const Player: React.FC<PlayerProps> = (props) => {
   const [mediaPlayInfo, setMediaPlayInfo] = useState<MediaPlayInfoModel>();
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const getMediaPlayInfo = async () => {
-    const response: MediaPlayInfoModel = await AppService.getMediaPlayInfo(
+    await AppService.getMediaPlayInfo(
       localStorage.getItem("token") || "{}",
       props.mediaId
-    );
-
+    )
+      .then((response: MediaPlayInfoModel) => {
+        if (!response.ContentUrl) {
+          setErrorMessage(ERROR_MESSAGES.NO_VIDEO_AVAILABLE);
+        }
+        setMediaPlayInfo(response);
+      })
+      .catch((error) => setErrorMessage(error.message));
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-    setMediaPlayInfo(response);
   };
+
   useEffect(() => {
     if (props.mediaId > 0) {
+      setErrorMessage(undefined);
       getMediaPlayInfo();
     }
   }, [props.mediaId]);
@@ -56,10 +66,10 @@ export const Player: React.FC<PlayerProps> = (props) => {
         <ModalBody m="auto">
           {isLoading ? (
             <Spinner />
-          ) : mediaPlayInfo?.ContentUrl ? (
+          ) : !errorMessage ? (
             <ReactPlayer controls url={mediaPlayInfo?.ContentUrl} />
           ) : (
-            <Text>No Video available</Text>
+            <Text>{errorMessage}</Text>
           )}
         </ModalBody>
       </ModalContent>

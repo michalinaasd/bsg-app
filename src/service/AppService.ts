@@ -1,19 +1,7 @@
+import { ERROR_MESSAGES } from "../constants";
+
 export class AppService {
   private static url: String = "https://thebetter.bsgroup.eu";
-
-  static async signIn() {
-    const response = await fetch(this.url + "/Authorization/SignIn", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        Device: {
-          PlatformCode: "WEB",
-          Name: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        },
-      }),
-    });
-    return await response.json();
-  }
 
   static async logIn(username: string, password: string): Promise<any> {
     const response = await fetch(this.url + "/Authorization/SignIn/", {
@@ -30,7 +18,7 @@ export class AppService {
     });
 
     if (response.status === 401) {
-      throw new Error("Incorrect username or password");
+      throw new Error(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
     return await response.json();
   }
@@ -72,6 +60,10 @@ export class AppService {
         StreamType: "TRIAL",
       }),
     });
+
+    if (response.status === 403) {
+      throw new Error(ERROR_MESSAGES.SUBSCRIPTION_ERROR);
+    }
     return await response.json();
   }
 }
