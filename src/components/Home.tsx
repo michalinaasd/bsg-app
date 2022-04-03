@@ -81,8 +81,9 @@ export const Home = () => {
                 _hover={{}}
                 _focus={{}}
                 position="absolute"
-                right="20px"
+                right="40px"
                 top="45%"
+                bg="red.200"
                 onClick={() => setPageNr(pageNr + 1)}
               >
                 <ArrowRightIcon />
@@ -92,10 +93,11 @@ export const Home = () => {
               <Button
                 h="30px"
                 w="20px"
+                bg="red.200"
                 _hover={{}}
                 _focus={{}}
                 position="absolute"
-                left="20px"
+                left="40px"
                 top="45%"
                 onClick={() => setPageNr(pageNr - 1)}
               >

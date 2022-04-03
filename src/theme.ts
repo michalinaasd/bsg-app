@@ -6,15 +6,8 @@ const config: ThemeConfig = {
   initialColorMode: "light",
   useSystemColorMode: false,
 };
-const styles = {
-  global: (props: any) => ({
-    body: {
-      color: mode("gray.800", "whiteAlpha.900")(props),
-      bg: mode("gray.100", "#141214")(props),
-    },
-  }),
-};
+
 // 3. extend the theme
-const theme = extendTheme({ config, styles });
+const theme = extendTheme({ config });
 
 export default theme;
